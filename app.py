@@ -58,7 +58,7 @@ def main():
 				st.write(transcript)
 				# Convert text to speech
 				sound_file = BytesIO()
-				tts = gTTS(transcript, lang='en')
+				tts = gTTS(transcript['text'], lang='en')
 				tts.write_to_fp(sound_file)
 				st.audio(sound_file)
 			# except:
