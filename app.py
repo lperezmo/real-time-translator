@@ -37,7 +37,7 @@ def main():
 
 	audio_bytes = audio_recorder()
 	if audio_bytes:
-		st.audio(audio_bytes, format="audio/wav")
+		st.audio(audio_bytes, format="audio/mp3")
 
 		# assuming you have a bytes object called data that contains a valid mp3 file
 		s = io.BytesIO(audio_bytes) # create a file-like object from the bytes object
