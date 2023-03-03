@@ -10,6 +10,7 @@ from io import BytesIO
 from bokeh.models.widgets import Button
 from bokeh.models import CustomJS
 from streamlit_bokeh_events import streamlit_bokeh_events
+import wave
 #---------------------------------#
 # Set page configuration
 #---------------------------------#
@@ -38,12 +39,14 @@ def main():
 	audio_bytes = audio_recorder()
 	if audio_bytes:
 		st.audio(audio_bytes, format="audio/wav")
-
-		wav_file = io.BytesIO(audio_bytes) # create a file-like object from the bytes object
-		sound = AudioSegment.from_file(wav_file) # read the file-like object as an audio segment
-		mp3_file = io.BytesIO() # create an empty file-like object for mp3
-		sound.export(mp3_file, format="mp3") # export the audio segment as mp3 to the file-like object
-		mp3_bytes = mp3_file.getvalue() # get the bytes value of the file-like object
+		st.session_state.audio_bytes = audio_bytes
+		# assuming you have a bytes object called "wav_bytes" that is wav
+		wav_file = io.BytesIO(wav_bytes) # create a file-like object from the bytes object
+		try:
+			wav_obj = wave.open(wav_file) # try to open the file-like object as a wave object
+			st.write(wav_obj.getparams()) # st.write the parameters of the wave object
+		except wave.Error as e:
+			st.write(e) # print the error message if it's not a valid wav object
 
 	# Form for real time translation
 	with st.form('input_form'):
@@ -54,8 +57,8 @@ def main():
 		if submit_button:
 			# Translate audio bytes into English
 			# audio_file= open("temp.mp3", "rb")
-			try:
-				transcript = openai.Audio.translate("whisper-1", mp3_bytes)
+			# try:
+				transcript = openai.Audio.translate("whisper-1", st.session_state.audio_bytes)
 				st.success('Translation successful!')
 				st.write(transcript)
 				# Convert text to speech
@@ -63,9 +66,9 @@ def main():
 				tts = gTTS(transcript, lang='en')
 				tts.write_to_fp(sound_file)
 				st.audio(sound_file)
-			except:
-				st.warning('Translation failed! Please try again.')
-				transcript = "Sorry, I didn't catch that. Please try again."
+			# except:
+			# 	st.warning('Translation failed! Please try again.')
+			# 	transcript = "Sorry, I didn't catch that. Please try again."
 
 	# Just play text to speech
 	with st.form('text_to_speech'):
