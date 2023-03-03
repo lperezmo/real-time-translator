@@ -51,7 +51,8 @@ def main():
 			# Translate audio bytes into English
 			# audio_file= open("temp.mp3", "rb")
 			# try:
-				transcript = openai.Audio.translate("whisper-1", st.session_state.audio_bytes)
+				audio_file = io.BytesIO(st.session_state.audio_bytes)
+				transcript = openai.Audio.translate("whisper-1", audio_file)
 				st.success('Translation successful!')
 				st.write(transcript)
 				# Convert text to speech
