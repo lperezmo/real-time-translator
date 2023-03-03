@@ -40,13 +40,6 @@ def main():
 	if audio_bytes:
 		st.audio(audio_bytes, format="audio/wav")
 		st.session_state.audio_bytes = audio_bytes
-		# assuming you have a bytes object called "wav_bytes" that is wav
-		wav_file = io.BytesIO(wav_bytes) # create a file-like object from the bytes object
-		try:
-			wav_obj = wave.open(wav_file) # try to open the file-like object as a wave object
-			st.write(wav_obj.getparams()) # st.write the parameters of the wave object
-		except wave.Error as e:
-			st.write(e) # print the error message if it's not a valid wav object
 
 	# Form for real time translation
 	with st.form('input_form'):
