@@ -37,6 +37,11 @@ def main():
 	if audio_bytes:
 		st.audio(audio_bytes, format="audio/wav")
 
+		# Save audio bytes to file
+		with open("output/temp.mp3", "wb") as f:
+			audio_bytes.seek(0)
+			f.write(audio_bytes.read())
+
 	# Form for real time translation
 	with st.form('input_form'):
 		st.subheader('Real Time Speech Translation')
@@ -45,11 +50,16 @@ def main():
 		submit_button = st.form_submit_button(label='Translate')
 		if submit_button:
 			# Translate audio bytes into English
-			# audio_file= open("output/temp.mp3", "rb")
+			audio_file= open("temp.mp3", "rb")
 			try:
-				transcript = openai.Audio.translate("whisper-1", audio_bytes)
+				transcript = openai.Audio.translate("whisper-1", audio_file)
 				st.success('Translation successful!')
 				st.write(transcript)
+				# Convert text to speech
+				sound_file = BytesIO()
+				tts = gTTS(transcript, lang='en')
+				tts.write_to_fp(sound_file)
+				st.audio(sound_file)
 			except:
 				st.warning('Translation failed! Please try again.')
 				transcript = "Sorry, I didn't catch that. Please try again."
