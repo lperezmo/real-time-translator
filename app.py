@@ -39,7 +39,11 @@ def main():
 	if audio_bytes:
 		st.audio(audio_bytes, format="audio/wav")
 
-		AudioSegment.from_bytes(audio_bytes, format="wav").export("temp.mp3", format="mp3")
+		wav_file = io.BytesIO(audio_bytes) # create a file-like object from the bytes object
+		sound = AudioSegment.from_file(wav_file) # read the file-like object as an audio segment
+		mp3_file = io.BytesIO() # create an empty file-like object for mp3
+		sound.export(mp3_file, format="mp3") # export the audio segment as mp3 to the file-like object
+		mp3_bytes = mp3_file.getvalue() # get the bytes value of the file-like object
 
 	# Form for real time translation
 	with st.form('input_form'):
@@ -49,9 +53,9 @@ def main():
 		submit_button = st.form_submit_button(label='Translate')
 		if submit_button:
 			# Translate audio bytes into English
-			audio_file= open("temp.mp3", "rb")
+			# audio_file= open("temp.mp3", "rb")
 			try:
-				transcript = openai.Audio.translate("whisper-1", audio_file)
+				transcript = openai.Audio.translate("whisper-1", mp3_bytes)
 				st.success('Translation successful!')
 				st.write(transcript)
 				# Convert text to speech
