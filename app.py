@@ -39,9 +39,7 @@ def main():
 	if audio_bytes:
 		st.audio(audio_bytes, format="audio/wav")
 
-		open("input.wav", "wb").write(audio_bytes)
-		sound = AudioSegment.from_wav("input.wav") # load the wav file as an audio segment
-		sound.export("temp.mp3", format="mp3") # export the audio segment as an mp3 file
+		AudioSegment.from_bytes(audio_bytes, format="wav").export("temp.mp3", format="mp3")
 
 	# Form for real time translation
 	with st.form('input_form'):
