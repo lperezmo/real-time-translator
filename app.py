@@ -52,6 +52,7 @@ def main():
 			# audio_file= open("temp.mp3", "rb")
 			# try:
 				audio_file = io.BytesIO(st.session_state.audio_bytes)
+				audio_file.name = "temp_audio_file.wav"
 				transcript = openai.Audio.translate("whisper-1", audio_file)
 				st.success('Translation successful!')
 				st.write(transcript)
