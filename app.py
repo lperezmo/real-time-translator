@@ -37,13 +37,11 @@ def main():
 
 	audio_bytes = audio_recorder()
 	if audio_bytes:
-		st.audio(audio_bytes, format="audio/mp3")
+		st.audio(audio_bytes, format="audio/wav")
 
-		# assuming you have a bytes object called data that contains a valid mp3 file
-		s = io.BytesIO(audio_bytes) # create a file-like object from the bytes object
-		audio = AudioSegment.from_file(s) # load the audio segment from the file-like object
-		audio.export("temp.mp3", format="mp3") # export the audio segment as an mp3 file
-
+		open("input.wav", "wb").write(audio_bytes)
+		sound = AudioSegment.from_wav("input.wav") # load the wav file as an audio segment
+		sound.export("temp.mp3", format="mp3") # export the audio segment as an mp3 file
 
 	# Form for real time translation
 	with st.form('input_form'):
