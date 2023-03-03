@@ -39,7 +39,6 @@ def main():
 
 		# Save audio bytes to file
 		with open("output/temp.mp3", "wb") as f:
-			audio_bytes.seek(0)
 			f.write(audio_bytes.read())
 
 	# Form for real time translation
