@@ -37,9 +37,10 @@ def main():
 	if audio_bytes:
 		st.audio(audio_bytes, format="audio/wav")
 
-		# Save audio bytes to file
-		with open("output/temp.mp3", "wb") as f:
-			f.write(audio_bytes.read())
+		# To save audio to a file:
+		wav_file = open("temp.mp3", "wb")
+		wav_file.write(audio_bytes.tobytes())
+
 
 	# Form for real time translation
 	with st.form('input_form'):
