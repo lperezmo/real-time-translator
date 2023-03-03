@@ -1,8 +1,10 @@
+import io
 import streamlit as st
 import pandas as pd
 import numpy as np
 from gtts import gTTS
 import openai
+from pydub import AudioSegment
 from audio_recorder_streamlit import audio_recorder
 from io import BytesIO
 from bokeh.models.widgets import Button
@@ -37,7 +39,10 @@ def main():
 	if audio_bytes:
 		st.audio(audio_bytes, format="audio/wav")
 
-		st.experimental_show(audio_bytes, type(audio_bytes))
+		# assuming you have a bytes object called data that contains a valid mp3 file
+		s = io.BytesIO(audio_bytes) # create a file-like object from the bytes object
+		audio = AudioSegment.from_file(s) # load the audio segment from the file-like object
+		audio.export("temp.mp3", format="mp3") # export the audio segment as an mp3 file
 
 
 	# Form for real time translation

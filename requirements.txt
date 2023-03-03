@@ -5,3 +5,4 @@ audio-recorder-streamlit == 0.0.8
 openai == 0.27.0
 bokeh == 2.4.3
 streamlit-bokeh-events == 0.1.2
+pydub == 0.25.1
