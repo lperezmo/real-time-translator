@@ -40,7 +40,7 @@ def main():
 	audio_bytes = audio_recorder()
 	if audio_bytes:
 	 if len(audio_bytes) > 0:
-			st.success(”Audio captured correctly”)
+			st.success('Audio captured correctly')
 		st.audio(audio_bytes, format="audio/wav")
 		st.session_state.audio_bytes = audio_bytes
 
@@ -65,7 +65,7 @@ def main():
 				tts.write_to_fp(sound_file)
 				st.audio(sound_file)
 			else:
-				st.warning(”No audio recorded, please make sure your audio got recorded correctly.”)
+				st.warning('No audio recorded, please make sure your audio got recorded correctly.')
 			# 	st.warning('Translation failed! Please try again.')
 			# 	transcript = "Sorry, I didn't catch that. Please try again."
 
