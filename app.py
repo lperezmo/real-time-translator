@@ -1,16 +1,10 @@
 import io
 import streamlit as st
-import pandas as pd
-import numpy as np
 from gtts import gTTS
 import openai
-from pydub import AudioSegment
-from audio_recorder_streamlit import audio_recorder
 from io import BytesIO
-from bokeh.models.widgets import Button
-from bokeh.models import CustomJS
-from streamlit_bokeh_events import streamlit_bokeh_events
-import wave
+import time
+
 #---------------------------------#
 # Set page configuration
 #---------------------------------#
@@ -39,10 +33,13 @@ def main():
 
 	audio_bytes = audio_recorder()
 	if audio_bytes:
-	 #if len(audio_bytes) > 0:
-			#st.success('Audio captured correctly')
+		if len(audio_bytes) > 0:
+				st.success('Audio captured correctly')
 		st.audio(audio_bytes, format="audio/wav")
 		st.session_state.audio_bytes = audio_bytes
+	else:
+		time.sleep(10)
+		st.experimental_rerun()
 
 	# Form for real time translation
 	with st.form('input_form'):
@@ -51,23 +48,26 @@ def main():
 		# Submit button
 		submit_button = st.form_submit_button(label='Translate')
 		if submit_button:
-			# Translate audio bytes into English
-			# audio_file= open("temp.mp3", "rb")
-			#if ‘audio_bytes’ in st.session_state:
-				audio_file = io.BytesIO(st.session_state.audio_bytes)
-				audio_file.name = "temp_audio_file.wav"
-				transcript = openai.Audio.translate("whisper-1", audio_file)
-				st.success('Translation successful!')
-				st.write(transcript)
-				# Convert text to speech
-				sound_file = BytesIO()
-				tts = gTTS(transcript['text'], lang='en')
-				tts.write_to_fp(sound_file)
-				st.audio(sound_file)
-			#else:
-				#st.warning('No audio recorded, please make sure your audio got recorded correctly.')
-			# 	st.warning('Translation failed! Please try again.')
-			# 	transcript = "Sorry, I didn't catch that. Please try again."
+			if 'audio_bytes' in st.session_state:
+				if len(st.session_state.audio_bytes) > 0:
+					# Translate audio bytes into English
+					audio_file = io.BytesIO(st.session_state.audio_bytes)
+					audio_file.name = "temp_audio_file.wav"
+					transcript = openai.Audio.translate("whisper-1", audio_file)
+					st.success('Translation successful!')
+					st.write(transcript)
+					if len(transcript['text']) > 0: 
+						# Convert text to speech
+						sound_file = BytesIO()
+						tts = gTTS(transcript['text'], lang='en')
+						tts.write_to_fp(sound_file)
+						st.audio(sound_file)
+					else:
+						st.warning('No text to convert to speech.')
+				else:
+					st.warning('No audio recorded, please make sure your audio got recorded correctly.')
+			else:
+				st.warning('No audio recorded, please make sure your audio got recorded correctly.')
 
 	# Just play text to speech
 	with st.form('text_to_speech'):
