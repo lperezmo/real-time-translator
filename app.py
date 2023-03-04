@@ -35,6 +35,8 @@ def main():
 		# Check if audio is less than half a second
 		if len(audio_bytes) > 8000:
 				st.success('Audio captured correctly')
+		else:
+			st.warning('Audio captured incorrectly, please try again.')
 		st.audio(audio_bytes, format="audio/wav")
 		st.session_state.audio_bytes = audio_bytes\
 		
