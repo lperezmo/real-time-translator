@@ -3,7 +3,6 @@ import streamlit as st
 from gtts import gTTS
 import openai
 from io import BytesIO
-import time
 
 #---------------------------------#
 # Set page configuration
@@ -33,14 +32,12 @@ def main():
 
 	audio_bytes = audio_recorder()
 	if audio_bytes:
-		if len(audio_bytes) > 0:
+		# Check if audio is less than half a second
+		if len(audio_bytes) > 8000:
 				st.success('Audio captured correctly')
 		st.audio(audio_bytes, format="audio/wav")
-		st.session_state.audio_bytes = audio_bytes
-	else:
-		time.sleep(10)
-		st.experimental_rerun()
-
+		st.session_state.audio_bytes = audio_bytes\
+		
 	# Form for real time translation
 	with st.form('input_form'):
 		st.subheader('Real Time Speech Translation')
