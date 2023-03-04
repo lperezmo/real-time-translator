@@ -39,8 +39,8 @@ def main():
 
 	audio_bytes = audio_recorder()
 	if audio_bytes:
-	 if len(audio_bytes) > 0:
-			st.success('Audio captured correctly')
+	 #if len(audio_bytes) > 0:
+			#st.success('Audio captured correctly')
 		st.audio(audio_bytes, format="audio/wav")
 		st.session_state.audio_bytes = audio_bytes
 
@@ -53,7 +53,7 @@ def main():
 		if submit_button:
 			# Translate audio bytes into English
 			# audio_file= open("temp.mp3", "rb")
-			if ‘audio_bytes’ in st.session_state:
+			#if ‘audio_bytes’ in st.session_state:
 				audio_file = io.BytesIO(st.session_state.audio_bytes)
 				audio_file.name = "temp_audio_file.wav"
 				transcript = openai.Audio.translate("whisper-1", audio_file)
@@ -64,8 +64,8 @@ def main():
 				tts = gTTS(transcript['text'], lang='en')
 				tts.write_to_fp(sound_file)
 				st.audio(sound_file)
-			else:
-				st.warning('No audio recorded, please make sure your audio got recorded correctly.')
+			#else:
+				#st.warning('No audio recorded, please make sure your audio got recorded correctly.')
 			# 	st.warning('Translation failed! Please try again.')
 			# 	transcript = "Sorry, I didn't catch that. Please try again."
 
