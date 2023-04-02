@@ -61,7 +61,7 @@ To use the app, follow these steps:
 ## License
 
 
-This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) for details.
+This project is licensed under the GPL-3.0 License - see [LICENSE.md](LICENSE.md) for details.
 
 
 
