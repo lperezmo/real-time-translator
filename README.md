@@ -1,6 +1,6 @@
 # Real-Time Translator
 
-![Streamlit app](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://translator.streamlitapp.com/)
 ![GitHub license](https://img.shields.io/github/license/lperezmo/real-time-translator)
 ![Python version](https://img.shields.io/badge/python-3.8-blue)
 ![GitHub last commit](https://img.shields.io/github/last-commit/lperezmo/real-time-translator)
