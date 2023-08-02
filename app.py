@@ -31,12 +31,11 @@ def main():
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 	# Record audio
-	# with st.form('Record and translate'):
+	if st.button("Translate recorded audio", type="primary"):
+		st.experimental_rerun()
 	audio_bytes = st_audiorec()
 
 	# Translate audio
-	if st.button("Attempt to translate recorded audio"):
-		st.experimental_rerun()
 	if audio_bytes:
 		# st.info('Audio successfully recorded, translating...')
 		if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
