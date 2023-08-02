@@ -12,7 +12,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+# build/  # Removed from gitignore to allow custom audio component to work
 develop-eggs/
 dist/
 downloads/
