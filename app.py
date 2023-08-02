@@ -34,7 +34,7 @@ def main():
 	audio_bytes = st_audiorec()
 	cols = st.columns(3)
 	if audio_bytes:
-		if audio_bytes:
+		if len(audio_bytes) > 0:
 			with cols[0]:
 				st.markdown("***Original Audio***")
 				st.audio(audio_bytes, format="audio/wav")
