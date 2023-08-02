@@ -29,7 +29,7 @@ def main():
 	# OpenAI API key
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-	audio = audiorecorder("Click to record", "Recording...")
+	audio = audiorecorder("Click to record", "Recording, click again to stop and translate...")
 	cols = st.columns(3)
 	if len(audio) > 0:
 		audio_bytes = audio.tobytes()
@@ -47,7 +47,7 @@ def main():
 			audio_file.name = "temp_audio_file.wav"
 			transcript = openai.Audio.translate("whisper-1", audio_file)
 			with cols[1]:
-				st.markdown("***Translation Trascript***")
+				st.markdown("***Translation Transcript***")
 				st.code(transcript['text'])
 			if len(transcript['text']) > 0: 
 				# Convert text to speech
