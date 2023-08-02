@@ -35,37 +35,37 @@ def main():
 	audio_bytes = st_audiorec()
 
 		# Translate audio
-		# if st.form_submit_button('Translate Recorded Audio', type='primary'):
-	if audio_bytes:
-		# st.info('Audio successfully recorded, translating...')
-		if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
-			# Translate audio bytes into English
-			audio_file = io.BytesIO(audio_bytes)
-			audio_file.name = "temp_audio_file.wav"
-			transcript = openai.Audio.translate("whisper-1", audio_file)
-			st.session_state.transcript = transcript
-			if len(transcript['text']) > 0: 
-				# Convert text to speech
-				sound_file = BytesIO()
-				tts = gTTS(transcript['text'], lang='en')
-				tts.write_to_fp(sound_file)
-				st.session_state.sound_file = sound_file
+	if st.button('Translate', type='primary'):
+		if audio_bytes:
+			# st.info('Audio successfully recorded, translating...')
+			if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
+				# Translate audio bytes into English
+				audio_file = io.BytesIO(audio_bytes)
+				audio_file.name = "temp_audio_file.wav"
+				transcript = openai.Audio.translate("whisper-1", audio_file)
+				st.session_state.transcript = transcript
+				if len(transcript['text']) > 0: 
+					# Convert text to speech
+					sound_file = BytesIO()
+					tts = gTTS(transcript['text'], lang='en')
+					tts.write_to_fp(sound_file)
+					st.session_state.sound_file = sound_file
+				else:
+					with cols[2]:
+						st.warning('No text to convert to speech.')
+			elif len(audio_bytes) > 48000000:
+				st.warning('Please keep your audio recordings under 10 minutes, thanks!')
+				st.stop()
 			else:
-				with cols[2]:
-					st.warning('No text to convert to speech.')
-		elif len(audio_bytes) > 48000000:
-			st.warning('Please keep your audio recordings under 10 minutes, thanks!')
-			st.stop()
+				st.warning('Takes a little while to process the audio on the backend, please try again.')
 		else:
-			st.warning('No audio recorded, please make sure your audio got recorded correctly.')
-	else:
-		st.warning('No audio recorded, please make sure your audio got recorded correctly.')
+			st.warning('Takes a little while to process the audio on the backend, please try again.')
 
 	cols = st.columns(2)
 	if 'transcript' in st.session_state:
 		with cols[0]:
 			st.markdown("***Translation Transcript***")
-			st.code(st.session_state.transcript['text'])
+			st.text_area(st.session_state.transcript['text'])
 	
 	if 'sound_file' in st.session_state:
 		with cols[1]:
