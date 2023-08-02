@@ -31,46 +31,43 @@ def main():
 	# OpenAI API key
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-	# Record audio
-	audio_bytes = audio_recorder(pause_threshold=40)
+	audio_bytes = audio_recorder(pause_threshold = 40)
 	if audio_bytes:
-		if len(audio_bytes) > 8000 and len(audio_bytes) < 48000000:
-			# Translate audio bytes into English
-			audio_file = io.BytesIO(audio_bytes)
-			st.session_state.original_sound = audio_file
-			if audio_file:
-				st.audio(audio_file)
-				st.divider()
-		elif len(audio_bytes) > 48000000:
-			st.warning('Please keep your audio recordings under 10 minutes, thanks!')
-			st.stop()
-			
-	if 'original_sound' in st.session_state:
-		if st.button("Translate recording", type="primary"):
-			audio_file.name = "temp_audio_file.wav"
-			transcript = openai.Audio.translate("whisper-1", st.session_state.original_sound)
-			st.session_state.transcript = transcript
-			if len(transcript['text']) > 0: 
-				# Convert text to speech
-				sound_file = BytesIO()
-				tts = gTTS(transcript['text'], lang='en')
-				tts.write_to_fp(sound_file)
-				st.session_state.sound_file = sound_file
-			else:
-				st.warning('No text to convert to speech.')
-			st.divider()
-			st.experimental_rerun()
+		# Check if audio is less than half a second
+		if len(audio_bytes) > 8000:
+				st.success('Audio captured correctly')
+		else:
+			st.warning('Audio captured incorrectly, please try again.')
+		st.audio(audio_bytes, format="audio/wav")
+		st.session_state.audio_bytes = audio_bytes\
+		
+	# Form for real time translation
+	with st.form('input_form'):
+		st.subheader('Real Time Speech Translation')
 
-	cols = st.columns(2)
-	if 'transcript' in st.session_state:
-		with cols[0]:
-			st.markdown("***Translation Transcript***")
-			st.text_area("Translation transcript", st.session_state.transcript['text'], label_visibility='collapsed')
-	if 'sound_file' in st.session_state:
-		with cols[1]:
-			st.markdown("***Synthesized Translation***")
-			st.audio(st.session_state.sound_file)
-		st.divider()
+		# Submit button
+		submit_button = st.form_submit_button(label='Translate')
+		if submit_button:
+			if 'audio_bytes' in st.session_state:
+				if len(st.session_state.audio_bytes) > 0:
+					# Translate audio bytes into English
+					audio_file = io.BytesIO(st.session_state.audio_bytes)
+					audio_file.name = "temp_audio_file.wav"
+					transcript = openai.Audio.translate("whisper-1", audio_file)
+					st.success('Translation successful!')
+					st.text_area('transcription', transcript['text'], label_visibility = 'collapsed')
+					if len(transcript['text']) > 0: 
+						# Convert text to speech
+						sound_file = BytesIO()
+						tts = gTTS(transcript['text'], lang='en')
+						tts.write_to_fp(sound_file)
+						st.audio(sound_file)
+					else:
+						st.warning('No text to convert to speech.')
+				else:
+					st.warning('No audio recorded, please make sure your audio got recorded correctly.')
+			else:
+				st.warning('No audio recorded, please make sure your audio got recorded correctly.')
 			
 	# Text to speech
 	with st.expander("Text to speech"):
