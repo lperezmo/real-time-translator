@@ -10,7 +10,7 @@ from audiorecorder import audiorecorder
 #---------------------------------#
 st.set_page_config(page_title='Real Time Translation', 
 					page_icon='🌎', 
-					layout='wide', 
+					layout='centered', 
 					initial_sidebar_state='auto')
 hide_streamlit_style = """
 			<style>
@@ -29,12 +29,15 @@ def main():
 	# OpenAI API key
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
+	cols = st.columns(3)
 	audio = audiorecorder("Click to record", "Recording...")
 	if len(audio) > 0:
 		audio_bytes = audio.tobytes()
 		if audio_bytes:
-			st.audio(audio_bytes, format="audio/wav")
-			st.session_state.audio_bytes = audio_bytes\
+			with cols[0]:
+				st.markdown("***Original Audio***")
+				st.audio(audio_bytes, format="audio/wav")
+				st.session_state.audio_bytes = audio_bytes\
 
 	if 'audio_bytes' in st.session_state:
 		# st.info('Audio successfully recorded, translating...')
@@ -43,20 +46,23 @@ def main():
 			audio_file = io.BytesIO(st.session_state.audio_bytes)
 			audio_file.name = "temp_audio_file.wav"
 			transcript = openai.Audio.translate("whisper-1", audio_file)
-			st.markdown("*See translation below:*")
-			st.code(transcript['text'])
+			with cols[1]:
+				st.markdown("***Translation Trascript***")
+				st.code(transcript['text'])
 			if len(transcript['text']) > 0: 
 				# Convert text to speech
 				sound_file = BytesIO()
 				tts = gTTS(transcript['text'], lang='en')
 				tts.write_to_fp(sound_file)
-				st.audio(sound_file)
+				with cols[2]:
+					st.markdown("***Synthesized Translation***")
+					st.audio(sound_file)
 			else:
-				st.warning('No text to convert to speech.')
+				with cols[2]:
+					st.warning('No text to convert to speech.')
 		else:
-			st.warning('No audio recorded, please make sure your audio got recorded correctly.')
-			# else:
-			# 	st.warning('No audio recorded, please make sure your audio got recorded correctly.')
+			with cols[1]:
+				st.warning('No audio recorded, please make sure your audio got recorded correctly.')
 
 	# Just play text to speech
 	with st.form('text_to_speech'):
