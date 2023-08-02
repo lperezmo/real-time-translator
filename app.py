@@ -32,49 +32,38 @@ def main():
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 	# Record audio
-	#audio_bytes = st_audiorec()
-	with st.form("Translate"):
-		audio_bytes = audio_recorder(pause_threshold=40)
-	
-		# Translate audio
-		if st.form_submit_button("Translate recording", type="primary"):
-			# st.info('Audio successfully recorded, translating...')
-			if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
-				# Translate audio bytes into English
-				audio_file = io.BytesIO(audio_bytes)
-				st.session_state.original_sound = audio_file
-				audio_file.name = "temp_audio_file.wav"
-				transcript = openai.Audio.translate("whisper-1", audio_file)
-				st.session_state.transcript = transcript
-				if len(transcript['text']) > 0: 
-					# Convert text to speech
-					sound_file = BytesIO()
-					tts = gTTS(transcript['text'], lang='en')
-					tts.write_to_fp(sound_file)
-					st.session_state.sound_file = sound_file
-				else:
-
-					st.warning('No text to convert to speech.')
-			elif len(audio_bytes) > 48000000:
-				st.warning('Please keep your audio recordings under 10 minutes, thanks!')
-				st.stop()
-			else:
-				st.warning('Takes a little while to process the audio on the backend, please try again.')
-	# else:
-	# 	st.warning('Takes a little while to process the audio on the backend, please try again.')
+	audio_bytes = audio_recorder(pause_threshold=40)
+	if audio_bytes:
+		if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
+			# Translate audio bytes into English
+			audio_file = io.BytesIO(audio_bytes)
+			st.session_state.original_sound = audio_file
+		elif len(audio_bytes) > 48000000:
+			st.warning('Please keep your audio recordings under 10 minutes, thanks!')
+			st.stop()
+		
+	with st.button("Translate recording", type="primary"):
+		audio_file.name = "temp_audio_file.wav"
+		transcript = openai.Audio.translate("whisper-1", st.session_state.original_sound)
+		st.session_state.transcript = transcript
+		if len(transcript['text']) > 0: 
+			# Convert text to speech
+			sound_file = BytesIO()
+			tts = gTTS(transcript['text'], lang='en')
+			tts.write_to_fp(sound_file)
+			st.session_state.sound_file = sound_file
+		else:
+			st.warning('No text to convert to speech.')
 
 	cols = st.columns(3)
-			
 	if 'original_sound' in st.session_state:
 		with cols[0]:
 			st.markdown("***Original Recording***")
 			st.audio(st.session_state.original_sound)
-
 	if 'transcript' in st.session_state:
 		with cols[1]:
 			st.markdown("***Translation Transcript***")
 			st.text_area("Translation transcript", st.session_state.transcript['text'], label_visibility='collapsed')
-			
 	if 'sound_file' in st.session_state:
 		with cols[2]:
 			st.markdown("***Synthesized Translation***")
