@@ -39,7 +39,6 @@ def main():
 			audio_file = io.BytesIO(audio_bytes)
 			st.session_state.original_sound = audio_file
 			if audio_file:
-				st.markdown("***Original Recording***")
 				st.audio(audio_file)
 				st.divider()
 		elif len(audio_bytes) > 48000000:
@@ -58,6 +57,7 @@ def main():
 			st.session_state.sound_file = sound_file
 		else:
 			st.warning('No text to convert to speech.')
+		st.divider()
 
 	cols = st.columns(2)
 	if 'transcript' in st.session_state:
@@ -68,11 +68,12 @@ def main():
 		with cols[1]:
 			st.markdown("***Synthesized Translation***")
 			st.audio(st.session_state.sound_file)
+		st.divider()
 			
 	# Text to speech
 	with st.expander("Text to speech"):
 		with st.form('text_to_speech'):
-			st.subheader('Text to Speech')
+			# st.subheader('Text to Speech')
 			text_to_speech = st.text_area('Enter text to convert to speech')
 			submit_button = st.form_submit_button(label='Convert')
 			if submit_button and len(text_to_speech) > 0:
