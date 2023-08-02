@@ -54,7 +54,7 @@ def main():
 					audio_file = io.BytesIO(st.session_state.audio_bytes)
 					audio_file.name = "temp_audio_file.wav"
 					transcript = openai.Audio.translate("whisper-1", audio_file)
-					st.success('Translation successful!')
+					# st.success('Translation successful!')
 					st.markdown("***Translation Transcript***")
 					st.text_area('transcription', transcript['text'], label_visibility = 'collapsed')
 					if len(transcript['text']) > 0: 
@@ -62,7 +62,7 @@ def main():
 						sound_file = BytesIO()
 						tts = gTTS(transcript['text'], lang='en')
 						tts.write_to_fp(sound_file)
-						st.markdown("***Synthesized Translation***")
+						st.markdown("***Synthesized Speech Translation***")
 						st.audio(sound_file)
 					else:
 						st.warning('No text to convert to speech.')
