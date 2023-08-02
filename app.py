@@ -44,20 +44,21 @@ def main():
 		elif len(audio_bytes) > 48000000:
 			st.warning('Please keep your audio recordings under 10 minutes, thanks!')
 			st.stop()
-		
-	if st.button("Translate recording", type="primary"):
-		audio_file.name = "temp_audio_file.wav"
-		transcript = openai.Audio.translate("whisper-1", st.session_state.original_sound)
-		st.session_state.transcript = transcript
-		if len(transcript['text']) > 0: 
-			# Convert text to speech
-			sound_file = BytesIO()
-			tts = gTTS(transcript['text'], lang='en')
-			tts.write_to_fp(sound_file)
-			st.session_state.sound_file = sound_file
-		else:
-			st.warning('No text to convert to speech.')
-		st.divider()
+			
+	if 'original_sound' in st.session_state:
+		if st.button("Translate recording", type="primary"):
+			audio_file.name = "temp_audio_file.wav"
+			transcript = openai.Audio.translate("whisper-1", st.session_state.original_sound)
+			st.session_state.transcript = transcript
+			if len(transcript['text']) > 0: 
+				# Convert text to speech
+				sound_file = BytesIO()
+				tts = gTTS(transcript['text'], lang='en')
+				tts.write_to_fp(sound_file)
+				st.session_state.sound_file = sound_file
+			else:
+				st.warning('No text to convert to speech.')
+			st.divider()
 
 	cols = st.columns(2)
 	if 'transcript' in st.session_state:
