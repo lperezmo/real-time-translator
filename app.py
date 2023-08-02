@@ -3,7 +3,8 @@ import openai
 from gtts import gTTS
 import streamlit as st
 from io import BytesIO
-from audiorecorder import audiorecorder
+import streamlit.components.v1 as components
+from st_custom_components import st_audiorec
 
 #---------------------------------#
 # Set page configuration
@@ -29,7 +30,7 @@ def main():
 	# OpenAI API key
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-	audio = audiorecorder("Click to record", "Recording, click again to stop and translate...")
+	audio = st_audiorec()
 	cols = st.columns(3)
 	if len(audio) > 0:
 		audio_bytes = audio.tobytes()
