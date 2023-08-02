@@ -31,49 +31,46 @@ def main():
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 	# Record audio
-	audio_bytes = st_audiorec()
-	if audio_bytes:
-		if len(audio_bytes) > 0:
-			# st.markdown("***Original Audio***")
-			# st.audio(audio_bytes, format="audio/wav")
-			# Check if audio is longer than 10 minutes
-			if len(audio_bytes) > 48000000:
-				st.warning('Please keep your audio recordings under 10 minutes, thanks!')
-				st.stop()
-			else:
-				st.session_state.audio_bytes = audio_bytes\
+	with st.form('Record and translate'):
+		audio_bytes = st_audiorec()
 
-	# Translate audio
-	cols = st.columns(2)
-	if st.button('Translate Recorded Audio', type='primary'):
-		if 'audio_bytes' in st.session_state:
-			# st.info('Audio successfully recorded, translating...')
-			if len(st.session_state.audio_bytes) > 0:
-				# Translate audio bytes into English
-				audio_file = io.BytesIO(st.session_state.audio_bytes)
-				audio_file.name = "temp_audio_file.wav"
-				transcript = openai.Audio.translate("whisper-1", audio_file)
-				with cols[0]:
-					st.markdown("***Translation Transcript***")
-					st.code(transcript['text'])
-				if len(transcript['text']) > 0: 
-					# Convert text to speech
-					sound_file = BytesIO()
-					tts = gTTS(transcript['text'], lang='en')
-					tts.write_to_fp(sound_file)
-					with cols[1]:
-						st.markdown("***Synthesized Translation***")
-						st.audio(sound_file)
+		# Translate audio
+		if st.form_submit_button('Translate Recorded Audio', type='primary'):
+			if audio_bytes:
+				# st.info('Audio successfully recorded, translating...')
+				if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
+					# Translate audio bytes into English
+					audio_file = io.BytesIO(st.session_state.audio_bytes)
+					audio_file.name = "temp_audio_file.wav"
+					transcript = openai.Audio.translate("whisper-1", audio_file)
+					st.session_state.transcript = transcript
+					if len(transcript['text']) > 0: 
+						# Convert text to speech
+						sound_file = BytesIO()
+						tts = gTTS(transcript['text'], lang='en')
+						tts.write_to_fp(sound_file)
+						st.session_state.sound_file = sound_file
+					else:
+						with cols[2]:
+							st.warning('No text to convert to speech.')
+				elif len(audio_bytes) > 48000000:
+					st.warning('Please keep your audio recordings under 10 minutes, thanks!')
+					st.stop()
 				else:
-					with cols[2]:
-						st.warning('No text to convert to speech.')
-			else:
-				with cols[1]:
 					st.warning('No audio recorded, please make sure your audio got recorded correctly.')
-		else:
-			with cols[1]:
+			else:
 				st.warning('No audio recorded, please make sure your audio got recorded correctly.')
+
+	cols = st.columns(2)
+	if 'transcript' in st.session_state:
+		with cols[0]:
+			st.markdown("***Translation Transcript***")
+			st.code(st.session_state.transcript['text'])
 	
+	if 'sound_file' in st.session_state:
+		with cols[1]:
+			st.markdown("***Synthesized Translation***")
+			st.audio(st.session_state.sound_file)
 	# Text to speech
 	with st.expander("Text to speech"):
 		with st.form('text_to_speech'):
