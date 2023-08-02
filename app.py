@@ -120,7 +120,7 @@ def check_password():
 # Run the main function
 #---------------------------------#
 if __name__ == '__main__':
-	if st.button("Translate recorded audio", type="primary"):
-		st.experimental_rerun()
+	#if st.button("Translate recorded audio", type="primary"):
+	#	st.experimental_rerun()
 	# if check_password():
 	main()
