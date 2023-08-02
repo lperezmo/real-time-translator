@@ -38,6 +38,10 @@ def main():
 			# Translate audio bytes into English
 			audio_file = io.BytesIO(audio_bytes)
 			st.session_state.original_sound = audio_file
+			if audio_file:
+				st.markdown("***Original Recording***")
+				st.audio(audio_file)
+				st.divider()
 		elif len(audio_bytes) > 48000000:
 			st.warning('Please keep your audio recordings under 10 minutes, thanks!')
 			st.stop()
@@ -55,17 +59,13 @@ def main():
 		else:
 			st.warning('No text to convert to speech.')
 
-	cols = st.columns(3)
-	if 'original_sound' in st.session_state:
-		with cols[0]:
-			st.markdown("***Original Recording***")
-			st.audio(st.session_state.original_sound)
+	cols = st.columns(2)
 	if 'transcript' in st.session_state:
-		with cols[1]:
+		with cols[0]:
 			st.markdown("***Translation Transcript***")
 			st.text_area("Translation transcript", st.session_state.transcript['text'], label_visibility='collapsed')
 	if 'sound_file' in st.session_state:
-		with cols[2]:
+		with cols[1]:
 			st.markdown("***Synthesized Translation***")
 			st.audio(st.session_state.sound_file)
 			
