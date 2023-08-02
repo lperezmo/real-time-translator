@@ -31,8 +31,6 @@ def main():
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 	# Record audio
-	if st.button("Translate recorded audio", type="primary"):
-		st.experimental_rerun()
 	audio_bytes = st_audiorec()
 
 	# Translate audio
@@ -122,5 +120,7 @@ def check_password():
 # Run the main function
 #---------------------------------#
 if __name__ == '__main__':
+	if st.button("Translate recorded audio", type="primary"):
+		st.experimental_rerun()
 	# if check_password():
-		main()
+	main()
