@@ -43,10 +43,10 @@ def main():
 		
 	# Form for real time translation
 	with st.form('input_form'):
-		st.subheader('Real Time Speech Translation')
+		# st.subheader('Real Time Speech Translation')
 
 		# Submit button
-		submit_button = st.form_submit_button(label='Translate')
+		submit_button = st.form_submit_button(label='Translate', type='primary')
 		if submit_button:
 			if 'audio_bytes' in st.session_state:
 				if len(st.session_state.audio_bytes) > 0:
@@ -55,12 +55,14 @@ def main():
 					audio_file.name = "temp_audio_file.wav"
 					transcript = openai.Audio.translate("whisper-1", audio_file)
 					st.success('Translation successful!')
+					st.markdown("***Translation Transcript***")
 					st.text_area('transcription', transcript['text'], label_visibility = 'collapsed')
 					if len(transcript['text']) > 0: 
 						# Convert text to speech
 						sound_file = BytesIO()
 						tts = gTTS(transcript['text'], lang='en')
 						tts.write_to_fp(sound_file)
+						st.markdown("***Synthesized Translation***")
 						st.audio(sound_file)
 					else:
 						st.warning('No text to convert to speech.')
