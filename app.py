@@ -24,7 +24,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 #---------------------------------#
 def main():
 	st.header('Real Time Translation')
-	st.caption('Written by Luis Perez Morales')
+	st.caption('Written by LPM')
 
 	# OpenAI API key
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -33,29 +33,16 @@ def main():
 	if len(audio) > 0:
 		audio_bytes = audio.tobytes()
 		if audio_bytes:
-			# Check if audio is less than half a second
-			if len(audio_bytes) > 8000:
-					st.success('Audio captured correctly')
-			else:
-				st.warning('Audio captured incorrectly, please try again.')
 			st.audio(audio_bytes, format="audio/wav")
 			st.session_state.audio_bytes = audio_bytes\
-		
-	# # Form for real time translation
-	# with st.form('input_form'):
-	# 	st.subheader('Real Time Speech Translation')
 
-	# 	# Submit button
-	# 	submit_button = st.form_submit_button(label='Translate')
-	# 	if submit_button:
 	if 'audio_bytes' in st.session_state:
-		st.info('Audio successfully recorded, translating...')
+		# st.info('Audio successfully recorded, translating...')
 		if len(st.session_state.audio_bytes) > 0:
 			# Translate audio bytes into English
 			audio_file = io.BytesIO(st.session_state.audio_bytes)
 			audio_file.name = "temp_audio_file.wav"
 			transcript = openai.Audio.translate("whisper-1", audio_file)
-			st.success('Translation successful!')
 			st.markdown("*See translation below:*")
 			st.code(transcript['text'])
 			if len(transcript['text']) > 0: 
