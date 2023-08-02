@@ -34,7 +34,7 @@ def main():
 	# Record audio
 	audio_bytes = audio_recorder(pause_threshold=40)
 	if audio_bytes:
-		if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
+		if len(audio_bytes) > 8000 and len(audio_bytes) < 48000000:
 			# Translate audio bytes into English
 			audio_file = io.BytesIO(audio_bytes)
 			st.session_state.original_sound = audio_file
