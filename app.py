@@ -35,6 +35,8 @@ def main():
 	audio_bytes = st_audiorec()
 
 	# Translate audio
+	if st.button("Attempt to translate recorded audio"):
+		st.experimental_rerun()
 	if audio_bytes:
 		# st.info('Audio successfully recorded, translating...')
 		if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
