@@ -42,7 +42,7 @@ def main():
 			st.warning('Please keep your audio recordings under 10 minutes, thanks!')
 			st.stop()
 		
-	with st.button("Translate recording", type="primary"):
+	if st.button("Translate recording"):
 		audio_file.name = "temp_audio_file.wav"
 		transcript = openai.Audio.translate("whisper-1", st.session_state.original_sound)
 		st.session_state.transcript = transcript
