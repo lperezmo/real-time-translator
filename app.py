@@ -32,18 +32,19 @@ def main():
 
 	audio = st_audiorec()
 	cols = st.columns(3)
-	if len(audio) > 0:
-		audio_bytes = audio.tobytes()
-		if audio_bytes:
-			with cols[0]:
-				st.markdown("***Original Audio***")
-				st.audio(audio_bytes, format="audio/wav")
-				# Check if audio is longer than 10 minutes
-				if len(audio_bytes) > 48000000:
-					st.warning('Please keep your audio recordings under 10 minutes, thanks!')
-					st.stop()
-				else:
-					st.session_state.audio_bytes = audio_bytes\
+	if audio:
+		if len(audio) > 0:
+			audio_bytes = audio.tobytes()
+			if audio_bytes:
+				with cols[0]:
+					st.markdown("***Original Audio***")
+					st.audio(audio_bytes, format="audio/wav")
+					# Check if audio is longer than 10 minutes
+					if len(audio_bytes) > 48000000:
+						st.warning('Please keep your audio recordings under 10 minutes, thanks!')
+						st.stop()
+					else:
+						st.session_state.audio_bytes = audio_bytes\
 
 	if 'audio_bytes' in st.session_state:
 		# st.info('Audio successfully recorded, translating...')
