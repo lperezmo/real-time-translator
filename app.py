@@ -59,6 +59,7 @@ def main():
 			else:
 				st.warning('No text to convert to speech.')
 			st.divider()
+			st.experimental_rerun()
 
 	cols = st.columns(2)
 	if 'transcript' in st.session_state:
