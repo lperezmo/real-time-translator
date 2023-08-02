@@ -40,7 +40,7 @@ def main():
 				# st.info('Audio successfully recorded, translating...')
 				if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
 					# Translate audio bytes into English
-					audio_file = io.BytesIO(st.session_state.audio_bytes)
+					audio_file = io.BytesIO(audio_bytes)
 					audio_file.name = "temp_audio_file.wav"
 					transcript = openai.Audio.translate("whisper-1", audio_file)
 					st.session_state.transcript = transcript
@@ -71,6 +71,7 @@ def main():
 		with cols[1]:
 			st.markdown("***Synthesized Translation***")
 			st.audio(st.session_state.sound_file)
+			
 	# Text to speech
 	with st.expander("Text to speech"):
 		with st.form('text_to_speech'):
