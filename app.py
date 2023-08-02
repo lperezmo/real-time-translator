@@ -29,15 +29,17 @@ def main():
 	# OpenAI API key
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-	audio_bytes = audiorecorder("Click to record", "Recording...")
-	if audio_bytes:
-		# Check if audio is less than half a second
-		if len(audio_bytes) > 8000:
-				st.success('Audio captured correctly')
-		else:
-			st.warning('Audio captured incorrectly, please try again.')
-		st.audio(audio_bytes, format="audio/wav")
-		st.session_state.audio_bytes = audio_bytes\
+	audio = audiorecorder("Click to record", "Recording...")
+	if len(audio) > 0:
+		audio_bytes = audio.tobytes()
+		if audio_bytes:
+			# Check if audio is less than half a second
+			if len(audio_bytes) > 8000:
+					st.success('Audio captured correctly')
+			else:
+				st.warning('Audio captured incorrectly, please try again.')
+			st.audio(audio_bytes, format="audio/wav")
+			st.session_state.audio_bytes = audio_bytes\
 		
 	# # Form for real time translation
 	# with st.form('input_form'):
