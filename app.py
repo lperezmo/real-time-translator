@@ -33,15 +33,16 @@ def main():
 
 	# Record audio
 	#audio_bytes = st_audiorec()
-	audio_bytes = audio_recorder(pause_threshold=40)
-
+	with st.form("Translate")
+		audio_bytes = audio_recorder(pause_threshold=40)
 	
 	# Translate audio
-	if audio_bytes:
+	if st.form_submit_form("Translate recording", type="primary"):
 		# st.info('Audio successfully recorded, translating...')
 		if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
 			# Translate audio bytes into English
 			audio_file = io.BytesIO(audio_bytes)
+			st.session_state.original_sound = audio_file
 			audio_file.name = "temp_audio_file.wav"
 			transcript = openai.Audio.translate("whisper-1", audio_file)
 			st.session_state.transcript = transcript
@@ -62,17 +63,23 @@ def main():
 	# else:
 	# 	st.warning('Takes a little while to process the audio on the backend, please try again.')
 
-	cols = st.columns(2)
-	if 'transcript' in st.session_state:
+	cols = st.columns(3)
+			
+	if 'original_sound' in st.session_state:
 		with cols[0]:
+			st.markdown("***Original Recording***")
+			st.audio(st.session_state.original_sound)
+
+	if 'transcript' in st.session_state:
+		with cols[1]:
 			st.markdown("***Translation Transcript***")
 			st.text_area("Translation transcript", st.session_state.transcript['text'], label_visibility='collapsed')
 			
 	if 'sound_file' in st.session_state:
-		with cols[1]:
+		with cols[2]:
 			st.markdown("***Synthesized Translation***")
 			st.audio(st.session_state.sound_file)
-
+			
 	# Text to speech
 	with st.expander("Text to speech"):
 		with st.form('text_to_speech'):
