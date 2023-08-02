@@ -37,7 +37,7 @@ def main():
 		audio_bytes = audio_recorder(pause_threshold=40)
 	
 		# Translate audio
-		if st.form_submit_form("Translate recording", type="primary"):
+		if st.form_submit_button("Translate recording", type="primary"):
 			# st.info('Audio successfully recorded, translating...')
 			if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
 				# Translate audio bytes into English
