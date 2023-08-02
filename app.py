@@ -34,33 +34,31 @@ def main():
 	# with st.form('Record and translate'):
 	audio_bytes = st_audiorec()
 
-		# Translate audio
-	if st.button('Translate', type='primary'):
-		st.experimental_rerun()
-		if audio_bytes:
-			# st.info('Audio successfully recorded, translating...')
-			if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
-				# Translate audio bytes into English
-				audio_file = io.BytesIO(audio_bytes)
-				audio_file.name = "temp_audio_file.wav"
-				transcript = openai.Audio.translate("whisper-1", audio_file)
-				st.session_state.transcript = transcript
-				if len(transcript['text']) > 0: 
-					# Convert text to speech
-					sound_file = BytesIO()
-					tts = gTTS(transcript['text'], lang='en')
-					tts.write_to_fp(sound_file)
-					st.session_state.sound_file = sound_file
-				else:
-					with cols[2]:
-						st.warning('No text to convert to speech.')
-			elif len(audio_bytes) > 48000000:
-				st.warning('Please keep your audio recordings under 10 minutes, thanks!')
-				st.stop()
+	# Translate audio
+	if audio_bytes:
+		# st.info('Audio successfully recorded, translating...')
+		if len(audio_bytes) > 0 and len(audio_bytes) < 48000000:
+			# Translate audio bytes into English
+			audio_file = io.BytesIO(audio_bytes)
+			audio_file.name = "temp_audio_file.wav"
+			transcript = openai.Audio.translate("whisper-1", audio_file)
+			st.session_state.transcript = transcript
+			if len(transcript['text']) > 0: 
+				# Convert text to speech
+				sound_file = BytesIO()
+				tts = gTTS(transcript['text'], lang='en')
+				tts.write_to_fp(sound_file)
+				st.session_state.sound_file = sound_file
 			else:
-				st.warning('Takes a little while to process the audio on the backend, please try again.')
+				with cols[2]:
+					st.warning('No text to convert to speech.')
+		elif len(audio_bytes) > 48000000:
+			st.warning('Please keep your audio recordings under 10 minutes, thanks!')
+			st.stop()
 		else:
 			st.warning('Takes a little while to process the audio on the backend, please try again.')
+	# else:
+	# 	st.warning('Takes a little while to process the audio on the backend, please try again.')
 
 	cols = st.columns(2)
 	if 'transcript' in st.session_state:
