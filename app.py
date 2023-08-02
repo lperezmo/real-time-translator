@@ -65,8 +65,8 @@ def main():
 	if 'transcript' in st.session_state:
 		with cols[0]:
 			st.markdown("***Translation Transcript***")
-			st.text_area(st.session_state.transcript['text'])
-	
+			st.text_area("Translation transcript", st.session_state.transcript['text'], label_visibility='collapsed')
+			
 	if 'sound_file' in st.session_state:
 		with cols[1]:
 			st.markdown("***Synthesized Translation***")
