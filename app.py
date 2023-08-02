@@ -3,7 +3,7 @@ import openai
 from gtts import gTTS
 import streamlit as st
 from io import BytesIO
-from audio-recorder-streamlit import audio_recorder
+from audio_recorder_streamlit import audio_recorder
 import streamlit.components.v1 as components
 from st_custom_components import st_audiorec
 
