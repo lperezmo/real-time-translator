@@ -29,8 +29,8 @@ def main():
 	# OpenAI API key
 	openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-	cols = st.columns(3)
 	audio = audiorecorder("Click to record", "Recording...")
+	cols = st.columns(3)
 	if len(audio) > 0:
 		audio_bytes = audio.tobytes()
 		if audio_bytes:
@@ -64,17 +64,17 @@ def main():
 			with cols[1]:
 				st.warning('No audio recorded, please make sure your audio got recorded correctly.')
 
-	# Just play text to speech
-	with st.form('text_to_speech'):
-		st.subheader('Text to Speech')
-		text_to_speech = st.text_area('Enter text to convert to speech')
-		submit_button = st.form_submit_button(label='Convert')
-		if submit_button and len(text_to_speech) > 0:
-			# Convert text to speech
-			sound_file = BytesIO()
-			tts = gTTS(text_to_speech, lang='en')
-			tts.write_to_fp(sound_file)
-			st.audio(sound_file)
+	with st.expander("Text to speech"):
+		with st.form('text_to_speech'):
+			st.subheader('Text to Speech')
+			text_to_speech = st.text_area('Enter text to convert to speech')
+			submit_button = st.form_submit_button(label='Convert')
+			if submit_button and len(text_to_speech) > 0:
+				# Convert text to speech
+				sound_file = BytesIO()
+				tts = gTTS(text_to_speech, lang='en')
+				tts.write_to_fp(sound_file)
+				st.audio(sound_file)
 
 def check_password():
 	"""
