@@ -52,7 +52,7 @@ def main():
             if transcript['text']:
                 # Convert text to speech
                 sound_file = BytesIO()
-                tts = gTTS(transcript['text'], lang='en')
+                tts = gTTS(transcript['text'], lang='id')
                 tts.write_to_fp(sound_file)
                 st.markdown("***Synthesized Speech Translation***")
                 st.audio(sound_file)
@@ -69,7 +69,7 @@ def main():
             if submit_button and text_to_speech:
                 # Convert text to speech
                 sound_file = BytesIO()
-                tts = gTTS(text_to_speech, lang='en')
+                tts = gTTS(text_to_speech, lang='id')
                 tts.write_to_fp(sound_file)
                 st.audio(sound_file)
 
