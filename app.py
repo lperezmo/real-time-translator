@@ -37,7 +37,7 @@ def main():
     # Form for real-time translation
     with st.form('input_form'):
         submit_button = st.form_submit_button(label='Translate', type='primary')
-        if submit_button and 'audio_bytes' in st.session_state and len(st.session_state.audio_bytes) > 0:
+        if submit_button and 'audio_bytes' in st.session_state and st.session_state.audio_bytes.size > 0:
             # Translate audio bytes into English
             audio_file = io.BytesIO(st.session_state.audio_bytes)
             audio_file.name = "temp_audio_file.wav"
