@@ -38,9 +38,11 @@ def main():
     with st.form('input_form'):
         submit_button = st.form_submit_button(label='Translate', type='primary')
         if submit_button and 'audio_bytes' in st.session_state and st.session_state.audio_bytes.size > 0:
-            # Translate audio bytes into English
-            audio_file = io.BytesIO(st.session_state.audio_bytes)
+            # Use st.session_state.audio_bytes directly since 
+            # UploadedFile is a subclass of BytesIO
+            audio_file = st.session_state.audio_bytes
             audio_file.name = "temp_audio_file.wav"
+            audio_file.seek(0)  # Reset file pointer to the beginning
             transcript = openai.Audio.translate("whisper-1", audio_file)
             st.markdown("***Translation Transcript***")
             st.text_area('transcription', transcript['text'], label_visibility='collapsed')
