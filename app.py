@@ -32,6 +32,7 @@ def main():
     audio_bytes = st.experimental_audio_input("Record a voice message")
     if audio_bytes:
         st.audio(audio_bytes)
+        st.session_state.audio_bytes = audio_bytes
 
     # Form for real-time translation
     with st.form('input_form'):
