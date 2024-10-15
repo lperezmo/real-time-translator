@@ -21,7 +21,6 @@ hide_streamlit_style = """
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-
 def main():
     st.header('Real Time Translation')
     st.caption('Written by LPM')
@@ -29,15 +28,10 @@ def main():
     # Set OpenAI API key
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-    audio_bytes = audio_recorder(pause_threshold=40)
+    # Audio input
+    audio_bytes = st.experimental_audio_input("Record a voice message")
     if audio_bytes:
-        # Check if audio is of sufficient length
-        if len(audio_bytes) > 8000:
-            st.success('Audio captured correctly')
-        else:
-            st.warning('Audio captured incorrectly, please try again.')
-        st.audio(audio_bytes, format="audio/wav")
-        st.session_state.audio_bytes = audio_bytes
+        st.audio(audio_bytes)
 
     # Form for real-time translation
     with st.form('input_form'):
