@@ -3,7 +3,6 @@ import openai
 from gtts import gTTS
 import streamlit as st
 from io import BytesIO
-from audio_recorder_streamlit import audio_recorder
 
 # Set page configuration
 st.set_page_config(
