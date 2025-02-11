@@ -54,8 +54,6 @@ def main():
                 st.audio(sound_file)
             else:
                 st.warning('No text to convert to speech.')
-        else:
-            st.warning('No audio recorded, please ensure your audio was recorded correctly.')
 
     # Text to speech section
     with st.expander("Text to speech"):
@@ -68,7 +66,6 @@ def main():
                 tts = gTTS(text_to_speech, lang='en')
                 tts.write_to_fp(sound_file)
                 st.audio(sound_file)
-
 
 if __name__ == '__main__':
     main()
