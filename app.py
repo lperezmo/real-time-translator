@@ -28,7 +28,7 @@ def main():
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
     # Audio input
-    audio_bytes = st.experimental_audio_input("Record a voice message")
+    audio_bytes = st.audio_input("Record a voice message")
     if audio_bytes:
         st.audio(audio_bytes)
         st.session_state.audio_bytes = audio_bytes
